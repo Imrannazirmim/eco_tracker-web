@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+body {
+      font-family: "Montserrat", sans-serif;
+      font-optical-sizing: auto;
+}
+
+li a.active {
+      @apply text-green-600 overflow-x-hidden border border-gray-200 py-1 px-2 rounded-md font-semibold;
+}
+
+@layer components {
+      .slider {
+            @apply flex justify-center items-center text-center bg-gray-500;
+      }
+      .slider_img {
+            @apply block w-full h-full bg-cover;
+      }
+      .select-category{
+        @apply w-2xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+      }
+}

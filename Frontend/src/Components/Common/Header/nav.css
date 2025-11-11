@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@layer components {
+      .btn {
+            @apply py-1 px-4 rounded-md bg-green-400 text-white font-semibold hover:bg-green-500 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-green-400/50;
+      }
+}
