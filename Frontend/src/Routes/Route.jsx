@@ -11,6 +11,10 @@ import SignIn from "../Pages/SignIn.jsx";
 import Register from "../Pages/Register.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ChallengeDetails from "../Components/Layout/ChallengeDetails.jsx";
+import { Suspense } from "react";
+import Dashboard from "../Pages/Dashboard.jsx";
+import Loading from "../Components/Utils/Loading.jsx";
+import Profile from "../Pages/Profile.jsx";
 
 const router = createBrowserRouter([
       {
@@ -19,14 +23,29 @@ const router = createBrowserRouter([
             errorElement: <NotFound />,
 
             children: [
-                  { index: true, element: <Home /> },
+                  {
+                        index: true,
+                        element: (
+                              <Suspense>
+                                    <Home />
+                              </Suspense>
+                        ),
+                  },
                   {
                         path: "challenges",
-                        element: <Challenges />,
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Challenges />
+                              </Suspense>
+                        ),
                   },
                   {
                         path: "challenges/:id",
-                        element: <ChallengeDetails />,
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <ChallengeDetails />,
+                              </Suspense>
+                        ),
                         loader: async ({ params }) => {
                               const response = await fetch(`http://localhost:3000/api/challenges/${params.id}`);
                               if (!response.ok) {
@@ -35,14 +54,50 @@ const router = createBrowserRouter([
                               return response.json();
                         },
                   },
-                  { path: "events", element: <Events /> },
-                  { path: "tips", element: <Tips /> },
+                  {
+                        path: "dashboard",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <Dashboard />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "profile",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <Profile />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "events",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Events />
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "tips",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Tips />
+                              </Suspense>
+                        ),
+                  },
                   {
                         path: "my-activities",
                         element: (
-                              <PrivateRoute>
-                                    <MyActivities />
-                              </PrivateRoute>
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <MyActivities />
+                                    </PrivateRoute>
+                              </Suspense>
                         ),
                   },
                   { path: "sign", element: <SignIn /> },
