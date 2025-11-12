@@ -16,6 +16,7 @@ import Dashboard from "../Pages/Dashboard.jsx";
 import Loading from "../Components/Utils/Loading.jsx";
 import Profile from "../Pages/Profile.jsx";
 import CreateChallenge from "../Pages/CreateChallenge.jsx";
+import MyChallenges from "../Pages/MyChallenges.jsx";
 
 const router = createBrowserRouter([
   {
@@ -114,6 +115,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<Loading />}>
             <PrivateRoute>
               <MyActivities />
+            </PrivateRoute>
+          </Suspense>
+        ),
+      },
+       {
+        path: "my-challenges",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PrivateRoute>
+              <MyChallenges />
             </PrivateRoute>
           </Suspense>
         ),
