@@ -5,7 +5,11 @@ const { config } = require("dotenv");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const admin = require("firebase-admin");
 
-// const serviceAccount = require("path/to/serviceAccountKey.json");
+const serviceAccount = require("./smart-deals-token.json");
+
+admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -53,10 +57,32 @@ const run = async () => {
 
             //challenge api create
 
+            //public challenge all post
             app.get("/api/challenges", async (req, res) => {
-                  const cursor = challengeCol.find();
-                  const result = await cursor.toArray();
-                  res.send(result);
+                  try {
+                        const cursor = challengeCol.find();
+                        const result = await cursor.toArray();
+                        res.send(result);
+                  } catch (error) {
+                        console.error("Error fetching challenges:", error);
+                        res.status(500).send({ message: "Failed to fetch challenges" });
+                  }
+            });
+
+            //private all challenge post
+            app.get("/api/challenges", verifyFireBaseToken, async (req, res) => {
+                  const email = req.token_email || req.query.email;
+                  const query = {};
+                  try {
+                        if (email) {
+                              query.createdBy = email;
+                        }
+                        const cursor = challengeCol.find(query);
+                        const result = await cursor.toArray();
+                        res.send(result);
+                  } catch (error) {
+                        res.status(500).send({message: 'Failed to fetch challenge'})
+                  }
             });
             app.get("/api/challenges/:id", async (req, res) => {
                   const id = req.params.id;
@@ -68,10 +94,54 @@ const run = async () => {
             });
 
             //post && patch & delete api challenge
-            app.post("/api/challenges", async (req, res) => {
-                  const newPost = req.body;
-                  const result = await challengeCol.insertOne(newPost);
-                  res.send(result);
+            app.post("/api/challenges", verifyFireBaseToken, async (req, res) => {
+                  const creatorEmail = req.token_email || req.query.email;
+                  try {
+                        const newChallenge = {
+                              ...req.body,
+                              participants: req.body.participants || 0,
+                              howToParticipate: req.body.howToParticipate || [],
+                              environmentalImpact: req.body.environmentalImpact || "",
+                              communityGoal: req.body.communityGoal || {
+                                    goal: "",
+                                    currentProgress: 0,
+                                    percentage: 0,
+                              },
+                              createdBy: creatorEmail,
+
+                              createdAt: new Date(),
+                        };
+
+                        // Ensure communityGoal has all required fields
+                        if (newChallenge.communityGoal && !newChallenge.communityGoal.currentProgress) {
+                              newChallenge.communityGoal.currentProgress = 0;
+                        }
+                        if (newChallenge.communityGoal && !newChallenge.communityGoal.percentage) {
+                              newChallenge.communityGoal.percentage = 0;
+                        }
+
+                        const result = await challengeCol.insertOne(newChallenge);
+
+                        const userChallenge = {
+                              email: req.token_email,
+                              challengeId: result.insertedId.toString(),
+                              challengeTitle: newChallenge.title,
+                              category: newChallenge.category,
+                              status: "created",
+                              role: "creator",
+                              joinDate: new Date(),
+                              progress: 0,
+                        };
+                        await userChallengeCol.insertOne(userChallenge);
+                        res.send({
+                              success: true,
+                              challengeId: result.insertedId,
+                              message: "challenge created Successfuly",
+                        });
+                  } catch (error) {
+                        console.error("Error creating challenge:", error);
+                        res.status(500).send({ error: "Failed to create challenge" });
+                  }
             });
             app.patch("/api/challenges/:id", async (req, res) => {
                   const id = req.params.id;
@@ -90,6 +160,21 @@ const run = async () => {
                   const result = await challengeCol.deleteOne(query);
                   res.send(result);
             });
+
+            // app.get("/api/", verifyFireBaseToken, async (req, res) => {
+            //       try {
+            //             const email = req.token_email || req.query.email;
+            //             const query = {};
+            //             if (email) {
+            //                   query.email = email;
+            //             }
+            //             const cursor = userChallengeCol.find(query);
+            //             const result = await cursor.toArray();
+            //             res.send(result);
+            //       } catch (error) {
+            //             res.status(500).send({ message: "Failed to Fetch User Challenges" });
+            //       }
+            // });
 
             await client.db("admin").command({ ping: 1 });
       } catch (error) {
