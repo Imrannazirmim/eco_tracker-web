@@ -11,6 +11,8 @@ import useAxiosSecure from "../Hooks/useAxiosSecure.jsx";
 const CreateChallenge = () => {
       const axiosInstance = useAxiosSecure();
       const navigate = useNavigate();
+      const [loading, setLoading] = useState(false);
+
       const [formData, setFormData] = useState({
             title: "",
             category: "",
@@ -29,7 +31,7 @@ const CreateChallenge = () => {
                   percentage: 0, // Added as requested, default 0
             },
       });
-      const [loading, setLoading] = useState(false);
+      
 
       // Predefined categories based on schema example; extend as needed
       const categories = [

@@ -15,7 +15,7 @@ const Navbar = () => {
       return (
             <>
                   <header className="w-full">
-                        <nav className="flex justify-between items-center py-4 px-12 ">
+                        <nav className="flex justify-between items-center py-4 px-20 ">
                               <div className="flex items-center gap-2">
                                     <img src={logo} alt="eco tracker" className="w-18" />
                                     <span className="text-[1.5rem] font-semibold text-green-600">EcoTrack</span>
