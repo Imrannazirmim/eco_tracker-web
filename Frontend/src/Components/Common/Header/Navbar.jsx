@@ -10,7 +10,7 @@ const Navbar = () => {
       const [showMenu, setShowMenu] = useState(false);
       const navigate = useNavigate();
 
-      console.log(user);
+      // console.log(user);
 
       return (
             <>
