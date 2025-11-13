@@ -22,20 +22,39 @@ A modern, responsive web application built with **React 19**, **Vite**, and **Ta
 
 ## 🧩 Tech Stack
 
-| Category | Technologies |
-|-----------|---------------|
-| **Frontend** | React 19, Vite, TailwindCSS |
+| Category          | Technologies                                      |
+| ----------------- | ------------------------------------------------- |
+| **Frontend**      | React 19, Vite, TailwindCSS                       |
 | **UI Components** | lucide-react, react-icons, react-loading-skeleton |
-| **Routing** | React Router v7 |
-| **State & API** | Axios, Firebase |
-| **Visualization** | Recharts |
-| **Alerts/Toasts** | SweetAlert2, React Toastify |
+| **Routing**       | React Router v7                                   |
+| **State & API**   | Axios, Firebase                                   |
+| **Visualization** | Recharts                                          |
+| **Alerts/Toasts** | SweetAlert2, React Toastify                       |
 
 ---
 
 ## ⚙️ Installation
 
 1. **Clone the repo:**
-   ```bash
-   git clone https://github.com/your-username/smart-deals.git
-   cd smart-deals
+      ```bash
+      git clone https://github.com/your-username/smart-deals.git
+      cd smart-deals
+      ```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+```arduino
+http://localhost:5173
+```
+
+```bash
+npm run build
+```
