@@ -195,7 +195,7 @@ const AccountSettings = () => {
       ];
 
       return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 ">
                   {/* Main Content */}
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="mb-6">
@@ -205,14 +205,14 @@ const AccountSettings = () => {
                               </p>
                         </div>
 
-                        <div className="flex gap-6">
+                        <div className="flex flex-col md:flex-row gap-6">
                               {/* Sidebar Menu */}
-                              <div className="w-64 flex-shrink-0">
+                              <div className="w-64 shrink-0">
                                     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                                           {/* User Profile Header */}
-                                          <div className="p-4 border-b border-gray-200 bg-gradient-to-br from-green-50 to-blue-50">
+                                          <div className="p-4 border-b border-gray-200 bg-linear-to-br from-green-50 to-blue-50">
                                                 <div className="flex items-center space-x-3">
-                                                      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                                                      <div className="w-12 h-12 bg-linear-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                                                             {personalInfo.photoURL ? (
                                                                   <img
                                                                         src={personalInfo.photoURL}
@@ -282,7 +282,7 @@ const AccountSettings = () => {
                                                             Profile Picture
                                                       </label>
                                                       <div className="flex items-center space-x-4">
-                                                            <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                                                            <div className="w-24 h-24 bg-linear-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                                                                   {personalInfo.photoURL ? (
                                                                         <img
                                                                               src={personalInfo.photoURL}
