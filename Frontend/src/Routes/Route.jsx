@@ -19,130 +19,130 @@ import CreateChallenge from "../Pages/CreateChallenge.jsx";
 import MyChallenges from "../Pages/MyChallenges.jsx";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />,
-    errorElement: <NotFound />,
-    children: [
       {
-        index: true,
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Home />
-          </Suspense>
-        ),
+            path: "/",
+            element: <MainLayout />,
+            errorElement: <NotFound />,
+            children: [
+                  {
+                        index: true,
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Home />
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "challenges",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Challenges />
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "challenges/:id",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <ChallengeDetails />
+                              </Suspense>
+                        ),
+                        loader: async ({ params }) => {
+                              try {
+                                    const response = await fetch(
+                                          `https://eco-traker-server-api.vercel.app/api/challenges/${params.id}`
+                                    );
+                                    if (!response.ok) {
+                                          throw new Error("Failed to fetch challenge");
+                                    }
+                                    return response.json();
+                              } catch (error) {
+                                    console.error("Error loading challenge:", error);
+                                    return null; // Return null instead of throwing to handle gracefully
+                              }
+                        },
+                        errorElement: <ErrorPage />,
+                  },
+                  {
+                        path: "create-challenges",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <CreateChallenge />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "dashboard",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <Dashboard />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "profile",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <Profile />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "events",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Events />
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "tips",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <Tips />
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "my-activities",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <MyActivities />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "my-challenges",
+                        element: (
+                              <Suspense fallback={<Loading />}>
+                                    <PrivateRoute>
+                                          <MyChallenges />
+                                    </PrivateRoute>
+                              </Suspense>
+                        ),
+                  },
+                  {
+                        path: "sign",
+                        element: <SignIn />,
+                  },
+                  {
+                        path: "register",
+                        element: <Register />,
+                  },
+                  {
+                        path: "*",
+                        element: <ErrorPage />,
+                  },
+            ],
       },
-      {
-        path: "challenges",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Challenges />
-          </Suspense>
-        ),
-      },
-      {
-        path: "challenges/:id",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <ChallengeDetails />
-          </Suspense>
-        ),
-        loader: async ({ params }) => {
-          try {
-            const response = await fetch(
-              `http://localhost:3000/api/challenges/${params.id}`
-            );
-            if (!response.ok) {
-              throw new Error("Failed to fetch challenge");
-            }
-            return response.json();
-          } catch (error) {
-            console.error("Error loading challenge:", error);
-            return null; // Return null instead of throwing to handle gracefully
-          }
-        },
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "create-challenges",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PrivateRoute>
-              <CreateChallenge />
-            </PrivateRoute>
-          </Suspense>
-        ),
-      },
-      {
-        path: "dashboard",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          </Suspense>
-        ),
-      },
-      {
-        path: "profile",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          </Suspense>
-        ),
-      },
-      {
-        path: "events",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Events />
-          </Suspense>
-        ),
-      },
-      {
-        path: "tips",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Tips />
-          </Suspense>
-        ),
-      },
-      {
-        path: "my-activities",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PrivateRoute>
-              <MyActivities />
-            </PrivateRoute>
-          </Suspense>
-        ),
-      },
-       {
-        path: "my-challenges",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <PrivateRoute>
-              <MyChallenges />
-            </PrivateRoute>
-          </Suspense>
-        ),
-      },
-      {
-        path: "sign",
-        element: <SignIn />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "*",
-        element: <ErrorPage />,
-      },
-    ],
-  },
 ]);
 
 export default router;

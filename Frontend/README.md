@@ -1,16 +1,41 @@
-# React + Vite
+# 🛍️ Smart Deals
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive web application built with **React 19**, **Vite**, and **TailwindCSS 4** — designed for discovering and managing the best online deals.
 
-Currently, two official plugins are available:
+🌐 **Live Demo:** [Smart Deals](https://smart-deals-e8410.web.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Smart Deals Preview](https://smart-deals-e8410.web.app/preview.png)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- ⚡️ Fast and optimized with **Vite**
+- 🎨 Styled with **TailwindCSS**
+- 🔥 Integrated with **Firebase**
+- 🔔 Notifications using **React Toastify**
+- 📊 Interactive charts via **Recharts**
+- 📱 Responsive design with **Swiper** support
+- 💬 Beautiful alerts using **SweetAlert2**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧩 Tech Stack
+
+| Category | Technologies |
+|-----------|---------------|
+| **Frontend** | React 19, Vite, TailwindCSS |
+| **UI Components** | lucide-react, react-icons, react-loading-skeleton |
+| **Routing** | React Router v7 |
+| **State & API** | Axios, Firebase |
+| **Visualization** | Recharts |
+| **Alerts/Toasts** | SweetAlert2, React Toastify |
+
+---
+
+## ⚙️ Installation
+
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/your-username/smart-deals.git
+   cd smart-deals

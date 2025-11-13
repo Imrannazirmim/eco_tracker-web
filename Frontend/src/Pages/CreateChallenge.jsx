@@ -1,16 +1,14 @@
-// CreateChallenge.jsx - Updated with full communityGoal fields (goal, currentProgress, percentage)
-// Initialize currentProgress as '0' and percentage as 0
-// Added inputs for all three; percentage can be auto-set if needed, but included as editable for flexibility
-
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { MdDateRange } from "react-icons/md";
-import useAxiosSecure from "../Hooks/useAxiosSecure.jsx";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { AuthContext } from "../Contexts/RootContext";
 
 const CreateChallenge = () => {
       const axiosInstance = useAxiosSecure();
       const navigate = useNavigate();
+      const { user } = useContext(AuthContext)
       const [loading, setLoading] = useState(false);
 
       const [formData, setFormData] = useState({
@@ -27,13 +25,11 @@ const CreateChallenge = () => {
             environmentalImpact: "",
             communityGoal: {
                   goal: "",
-                  currentProgress: "0", // Added as requested, default 0
-                  percentage: 0, // Added as requested, default 0
+                  currentProgress: "0",
+                  percentage: 0,
             },
       });
-      
 
-      // Predefined categories based on schema example; extend as needed
       const categories = [
             "Sustainable Transport",
             "Waste Reduction",
@@ -43,7 +39,6 @@ const CreateChallenge = () => {
             "Health",
       ];
 
-      // Predefined impact metrics; extend as needed
       const impactMetrics = [
             "CO2 saved",
             "kilograms (kg)",
@@ -71,36 +66,71 @@ const CreateChallenge = () => {
 
       const handleSubmit = async (e) => {
             e.preventDefault();
+
+            // Check if user is authenticated
+            if (!user || !user.email) {
+                  toast.error("You must be logged in to create a challenge.");
+                  navigate("/login");
+                  return;
+            }
+
+            // Validate required fields
             if (!formData.title || !formData.category || !formData.startDate || !formData.endDate) {
                   toast.error("Title, category, and dates are required.");
                   return;
             }
+
             // Calculate duration
             const start = new Date(formData.startDate);
             const end = new Date(formData.endDate);
             const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
             if (duration <= 0) {
                   toast.error("End date must be after start date.");
                   return;
             }
-            // Prepare data: split howToParticipate by newlines
+
+            // Prepare data
             const submitData = {
                   ...formData,
                   duration,
                   howToParticipate: formData.howToParticipate.split("\n").filter((item) => item.trim() !== ""),
-                  // Auto-set createdBy if user context available; stub here
-                  createdBy: "admin@ecotrack.com", // Replace with actual user email
+                  createdBy: user.email, // Use actual logged-in user email
+                  status: "active", // Add status field
             };
+
             // Trim goal
             submitData.communityGoal.goal = submitData.communityGoal.goal.trim();
 
             setLoading(true);
+
             try {
-                  await axiosInstance.post("/api/challenges", submitData);
+                  console.log("Submitting challenge data:", submitData);
+
+                  const response = await axiosInstance.post("/api/challenges", submitData);
+
+                  console.log("Challenge created successfully:", response.data);
                   toast.success("Challenge created successfully!");
                   navigate("/challenges");
             } catch (error) {
-                  toast.error("Failed to create challenge: " + error.message);
+                  console.error("Error creating challenge:", error);
+
+                  // Detailed error handling
+                  if (error.response) {
+                        // Server responded with error
+                        console.error("Error response:", error.response.data);
+                        toast.error(
+                              error.response.data.message || `Failed to create challenge: ${error.response.status}`
+                        );
+                  } else if (error.request) {
+                        // Request made but no response
+                        console.error("No response received:", error.request);
+                        toast.error("No response from server. Please check your connection.");
+                  } else {
+                        // Error setting up request
+                        console.error("Error setting up request:", error.message);
+                        toast.error("Failed to create challenge: " + error.message);
+                  }
             } finally {
                   setLoading(false);
             }
@@ -332,7 +362,7 @@ Log your miles daily..."
                                                 name="goal"
                                                 value={formData.communityGoal.goal}
                                                 onChange={handleCommunityGoalChange}
-                                                placeholder="e.g., 2000kg total CO2 savings from bike commutes"
+                                                placeholder="e.g., 2000kg total CO2 savings"
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                           />
                                     </div>
@@ -380,9 +410,31 @@ Log your miles daily..."
                                     <button
                                           type="submit"
                                           disabled={loading}
-                                          className="px-8 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+                                          className="px-8 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 flex items-center space-x-2"
                                     >
-                                          {loading ? "Creating..." : "Create Challenge"}
+                                          {loading ? (
+                                                <>
+                                                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                                            <circle
+                                                                  className="opacity-25"
+                                                                  cx="12"
+                                                                  cy="12"
+                                                                  r="10"
+                                                                  stroke="currentColor"
+                                                                  strokeWidth="4"
+                                                                  fill="none"
+                                                            />
+                                                            <path
+                                                                  className="opacity-75"
+                                                                  fill="currentColor"
+                                                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                            />
+                                                      </svg>
+                                                      <span>Creating...</span>
+                                                </>
+                                          ) : (
+                                                <span>Create Challenge</span>
+                                          )}
                                     </button>
                               </div>
                         </form>

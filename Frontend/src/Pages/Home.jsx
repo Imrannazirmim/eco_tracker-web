@@ -80,10 +80,8 @@ const Home = () => {
                         const tipsRes = await axiosSecure.get("/api/tips");
                         setTips(tipsRes.data.slice(0, 3));
                   } catch (tipError) {
-                        
                         setTips([]);
                         throw new Error(tipError.message);
-
                   }
 
                   // Calculate stats
@@ -94,7 +92,7 @@ const Home = () => {
                         treesPlanted: 5832,
                   });
             } catch (error) {
-                  throw new Error(error)
+                  throw new Error(error);
             }
       };
 
@@ -117,7 +115,7 @@ const Home = () => {
                                                 alt={slider.title}
                                                 className="w-full h-full object-cover"
                                           />
-                                          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70">
+                                          <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/50 to-black/70">
                                                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
                                                       <div className="text-white max-w-3xl">
                                                             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -144,7 +142,7 @@ const Home = () => {
                   </div>
 
                   {/* Stats Section */}
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 py-12">
+                  <div className="bg-linear-to-r from-green-50 to-blue-50 py-12">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                                     <div className="text-center">
@@ -441,7 +439,7 @@ const Home = () => {
                                     </div>
 
                                     {/* How It Works */}
-                                    <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8">
+                                    <div className="bg-linear-to-br from-green-50 to-blue-50 rounded-2xl p-8">
                                           <h2 className="text-3xl font-bold text-gray-900 mb-8">How It Works</h2>
                                           <div className="space-y-6">
                                                 {[

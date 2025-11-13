@@ -1,8 +1,11 @@
 import React from 'react'
+import Loading from '../Components/Utils/Loading'
 
 const Events = () => {
   return (
-    <div>Events</div>
+    <div>
+      <h2>Events</h2>
+    </div>
   )
 }
 
