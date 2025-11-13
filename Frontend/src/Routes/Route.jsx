@@ -17,6 +17,7 @@ import Loading from "../Components/Utils/Loading.jsx";
 import Profile from "../Pages/Profile.jsx";
 import CreateChallenge from "../Pages/CreateChallenge.jsx";
 import MyChallenges from "../Pages/MyChallenges.jsx";
+import ForgetPassword from "../Components/Utils/ForgetPassword.jsx";
 
 const router = createBrowserRouter([
       {
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
                   {
                         path: "register",
                         element: <Register />,
+                  },
+                  {
+                        path: "forget-password",
+                        element: <ForgetPassword />,
                   },
                   {
                         path: "*",

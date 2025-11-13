@@ -2,8 +2,10 @@ import { NavLink, useNavigate } from "react-router";
 import logo from "../../../assets/logo.png";
 import profileImg from "../../../assets/profile.png";
 import "./nav.css";
-import { use, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../Contexts/RootContext";
+import { RxCross1 } from "react-icons/rx";
+
 import {
       Menu,
       X,
@@ -19,16 +21,48 @@ import {
       ChevronDown,
       LayoutDashboard,
       Target,
+      Cross,
+      MenuIcon,
+      CrossIcon,
 } from "lucide-react";
+import { getAuth } from "firebase/auth";
+import { toast, ToastContainer } from "react-toastify";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { RiProfileFill, RiProfileLine } from "react-icons/ri";
 
 const Navbar = () => {
-      const { user, logoutUser } = use(AuthContext);
+      const { user, logoutUser } = useContext(AuthContext);
       const [showMenu, setShowMenu] = useState(false);
       const [showMobileMenu, setShowMobileMenu] = useState(false);
       const navigate = useNavigate();
+      const auth = getAuth();
+      const [userData, setUserData] = useState([]);
+      const axiosInstance = useAxiosSecure();
 
-      const handleNavigation = (path) => {
-            navigate(path);
+      useEffect(() => {
+            const handleUserData = async () => {
+                  if (!user) {
+                        return;
+                  }
+
+                  try {
+                        const res = await axiosInstance.get(`/api/user-challenges`);
+                        setUserData(res.data);
+                  } catch (error) {
+                        console.error("Failed to fetch user challenges:", error);
+                        if (error.response?.status !== 401) {
+                              toast.error("Failed to load user data");
+                        }
+                  }
+            };
+            handleUserData();
+      }, [user, axiosInstance]);
+
+      console.log(userData);
+
+      console.log(auth);
+      const handleNavigation = () => {
+            navigate("");
             setShowMobileMenu(false);
             setShowMenu(false);
       };
@@ -38,9 +72,9 @@ const Navbar = () => {
                   await logoutUser();
                   setShowMobileMenu(false);
                   setShowMenu(false);
-                  navigate("/register");
+                  navigate("/sign");
             } catch (error) {
-                  console.error("Logout error:", error);
+                  toast.error(error.message);
             }
       };
 
@@ -52,260 +86,189 @@ const Navbar = () => {
       ];
 
       return (
-            <header className="w-full bg-white shadow-md sticky top-0 z-50">
-                  <nav className="flex justify-between items-center py-4 px-6 md:px-20 mx-auto">
-                        {/* Logo */}
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavigation("/")}>
-                              <img src={logo} alt="eco tracker" className="w-10 md:w-12" />
-                              <span className="text-xl md:text-2xl font-semibold text-green-600">EcoTrack</span>
-                        </div>
+            <>
+                  <ToastContainer />
+                  <header className="w-full bg-white shadow-md sticky top-0 z-50">
+                        <nav className="flex justify-between items-center py-4 px-6 md:px-20 mx-auto">
+                              {/* Logo */}
+                              <div
+                                    className="flex items-center gap-2 cursor-pointer"
+                                    onClick={() => handleNavigation("/")}
+                              >
+                                    <img src={logo} alt="eco tracker" className="w-10 md:w-12" />
+                                    <span className="text-xl md:text-2xl font-semibold text-green-600">EcoTrack</span>
+                              </div>
 
-                        {/* Desktop Navigation */}
-                        <ul className="hidden lg:flex items-center gap-8">
-                              {navLinks.map((link) => (
-                                    <li key={link.path}>
-                                          <NavLink
-                                                to={link.path}
-                                                className="flex items-center gap-2 hover:text-green-600 transition-colors"
-                                          >
-                                                <link.icon className="w-4 h-4" />
-                                                {link.label}
-                                          </NavLink>
-                                    </li>
-                              ))}
-                              {user && (
-                                    <li>
-                                          <NavLink
-                                                to="/my-activities"
-                                                className="flex items-center gap-2 hover:text-green-600 transition-colors"
-                                          >
-                                                <Activity className="w-4 h-4" />
-                                                My Activities
-                                          </NavLink>
-                                    </li>
-                              )}
-                        </ul>
-
-                        {/* Desktop Auth Section */}
-                        <div className="hidden lg:flex items-center gap-4">
-                              {user ? (
-                                    <>
-                                          <button className="btn flex items-center gap-2" onClick={handleLogout}>
-                                                <LogOut className="w-4 h-4" />
-                                                Logout
-                                          </button>
-
-                                          {/* Profile Dropdown */}
-                                          <div className="relative">
-                                                <div
-                                                      className="flex items-center gap-2 cursor-pointer"
-                                                      onClick={() => setShowMenu(!showMenu)}
+                              {/* Desktop Navigation */}
+                              <ul className="hidden lg:flex  items-center gap-8">
+                                    {navLinks.map((link) => (
+                                          <li key={link.path}>
+                                                <NavLink
+                                                      to={link.path}
+                                                      className="flex items-center gap-2 hover:text-green-600 transition-colors"
                                                 >
-                                                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-green-600">
+                                                      <link.icon className="w-4 h-4" />
+                                                      {link.label}
+                                                </NavLink>
+                                          </li>
+                                    ))}
+                              </ul>
+                              <div className="hidden lg:flex items-center gap-8">
+                                    {user ? (
+                                          <>
+                                                <div className="flex gap-8 relative">
+                                                      <button className="btn" onClick={handleLogout}>
+                                                            LogOut
+                                                      </button>
+                                                      <div>
                                                             <img
-                                                                  src={user.photoURL || profileImg}
-                                                                  alt="User Avatar"
-                                                                  className="w-full h-full object-cover"
+                                                                  onClick={() => setShowMenu(!showMenu)}
+                                                                  className="w-12 rounded-full"
+                                                                  src={user.photoURL}
+                                                                  alt=""
                                                             />
                                                       </div>
-                                                      <ChevronDown
-                                                            className={`w-4 h-4 transition-transform ${
-                                                                  showMenu ? "rotate-180" : ""
-                                                            }`}
-                                                      />
-                                                </div>
 
-                                                {/* Dropdown Menu */}
-                                                {showMenu && (
-                                                      <div className="absolute top-14 right-0 w-64 bg-white border border-gray-200 rounded-xl shadow-xl p-3 animate-fadeIn">
-                                                            {/* User Info */}
-                                                            <div className="px-3 py-2 border-b border-gray-200 mb-2">
-                                                                  <h2 className="font-semibold text-gray-800 truncate">
-                                                                        {user.displayName || "User"}
-                                                                  </h2>
-                                                                  <h3 className="text-sm text-gray-600 truncate">
-                                                                        {user.email}
-                                                                  </h3>
-                                                            </div>
-
-                                                            {/* Menu Items */}
-                                                            <div className="space-y-1">
-                                                                  <div
-                                                                        onClick={() => handleNavigation("/dashboard")}
-                                                                        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                                  >
-                                                                        <LayoutDashboard className="w-4 h-4" />
-                                                                        <span>Dashboard</span>
+                                                      <div className="absolute z-20 top-16 right-2 ">
+                                                            {showMenu && (
+                                                                  <div className="shadow text-white border rounded-md border-gray-300 p-4 bg-green-900">
+                                                                        <div className="py-2">
+                                                                              <h2>{user?.displayName}</h2>
+                                                                              <p>{user?.email}</p>
+                                                                        </div>
+                                                                        <hr className="text-gray-300" />
+                                                                        <div className="mt-2 text-left">
+                                                                              <button
+                                                                                    onClick={() =>
+                                                                                          navigate("/my-activities")
+                                                                                    }
+                                                                                    className="hover:bg-green-800 flex items-center gap-2 p-2 w-full rounded-xl"
+                                                                              >
+                                                                                    <Activity /> My Activities
+                                                                              </button>
+                                                                              <button
+                                                                                    onClick={() =>
+                                                                                          navigate("/my-challenges")
+                                                                                    }
+                                                                                    className="hover:bg-green-800 flex items-center gap-2 p-2 w-full rounded-xl"
+                                                                              >
+                                                                                    <Trophy /> My Challenge{" "}
+                                                                              </button>
+                                                                              <button
+                                                                                    onClick={() => navigate("/profile")}
+                                                                                    className="hover:bg-green-800 p-2 flex items-center gap-2 w-full rounded-xl"
+                                                                              >
+                                                                                    <img
+                                                                                          src={profileImg}
+                                                                                          alt="profile image"
+                                                                                          className="w-[1.8rem]"
+                                                                                    />{" "}
+                                                                                    Profile
+                                                                              </button>
+                                                                        </div>
                                                                   </div>
-                                                                  <div
-                                                                        onClick={() =>
-                                                                              handleNavigation("/my-challenges")
-                                                                        }
-                                                                        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                                  >
-                                                                        <Target className="w-4 h-4" />
-                                                                        <span>My Challenges</span>
-                                                                  </div>
-                                                                  <div
-                                                                        onClick={() => handleNavigation("/profile")}
-                                                                        className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                                  >
-                                                                        <User className="w-4 h-4" />
-                                                                        <span>User Profile</span>
-                                                                  </div>
-                                                            </div>
+                                                            )}
                                                       </div>
-                                                )}
-                                          </div>
-                                    </>
-                              ) : (
-                                    <>
-                                          <button
-                                                className="btn flex items-center gap-2"
-                                                onClick={() => navigate("/sign")}
-                                          >
-                                                <LogIn className="w-4 h-4" />
-                                                Login
-                                          </button>
-                                          <button
-                                                className="btn flex items-center gap-2"
-                                                onClick={() => navigate("/register")}
-                                          >
-                                                <UserPlus className="w-4 h-4" />
-                                                Register
-                                          </button>
-                                    </>
-                              )}
-                        </div>
-
-                        {/* Mobile Menu Button */}
-                        <div className="lg:hidden flex items-center gap-3">
-                              {user && (
-                                    <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-green-600">
-                                          <img
-                                                src={user.photoURL || profileImg}
-                                                alt="User Avatar"
-                                                className="w-full h-full object-cover"
-                                          />
-                                    </div>
-                              )}
-                              <button
-                                    onClick={() => setShowMobileMenu(!showMobileMenu)}
-                                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                              >
-                                    {showMobileMenu ? (
-                                          <X className="w-6 h-6 text-gray-700" />
+                                                </div>
+                                          </>
                                     ) : (
-                                          <Menu className="w-6 h-6 text-gray-700" />
-                                    )}
-                              </button>
-                        </div>
-                  </nav>
-
-                  {/* Mobile Menu */}
-                  {showMobileMenu && (
-                        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-slideDown">
-                              <div className="px-6 py-4 max-w-7xl mx-auto">
-                                    {/* User Info (Mobile) */}
-                                    {user && (
-                                          <div className="px-4 py-3 bg-green-50 rounded-lg mb-4">
-                                                <h2 className="font-semibold text-gray-800 truncate">
-                                                      {user.displayName || "User"}
-                                                </h2>
-                                                <h3 className="text-sm text-gray-600 truncate">{user.email}</h3>
+                                          <div className="flex gap-8">
+                                                <button onClick={() => navigate("/sign")} className="btn">
+                                                      Login
+                                                </button>
+                                                <button onClick={() => navigate("/register")} className="btn">
+                                                      Register
+                                                </button>
                                           </div>
                                     )}
+                              </div>
+                              <div onClick={() => setShowMobileMenu(!showMobileMenu)} className="flex lg:hidden cursor-pointer">
+                                    {showMobileMenu ? <RxCross1 className="font-bold text-2xl" />  : <MenuIcon />}
+                              </div>
+                        </nav>
+                  </header>
+                  {/* mobile menu  */}
+                  {showMobileMenu && (
+                        <div className="lg:hidden bg-white border-t border-gray-200 shadow-md absolute w-full z-40">
+                              <ul className="flex flex-col gap-4 p-6">
+                                    {navLinks.map((link) => (
+                                          <li key={link.path}>
+                                                <NavLink
+                                                      to={link.path}
+                                                      onClick={() => setShowMobileMenu(false)}
+                                                      className={({ isActive }) =>
+                                                            `flex items-center gap-2 text-lg ${
+                                                                  isActive
+                                                                        ? "text-green-600 font-semibold"
+                                                                        : "text-gray-800 hover:text-green-600"
+                                                            }`
+                                                      }
+                                                >
+                                                      <link.icon className="w-5 h-5" />
+                                                      {link.label}
+                                                </NavLink>
+                                          </li>
+                                    ))}
+                                    <div>
+                                          <button
+                                                onClick={() => navigate("/my-activities")}
+                                                className="hover:bg-green-800 flex items-center gap-2 p-2 w-full rounded-xl"
+                                          >
+                                                <Activity /> My Activities
+                                          </button>
+                                          <button
+                                                onClick={() => navigate("/my-challenges")}
+                                                className="hover:bg-green-800 flex items-center gap-2 p-2 w-full rounded-xl"
+                                          >
+                                                <Trophy /> My Challenge{" "}
+                                          </button>
+                                          <button
+                                                onClick={() => navigate("/profile")}
+                                                className="hover:bg-green-800 p-2 flex items-center gap-2 w-full rounded-xl"
+                                          >
+                                                <img src={profileImg} alt="profile image" className="w-[1.8rem]" />{" "}
+                                                Profile
+                                          </button>
+                                    </div>
 
-                                    {/* Navigation Links */}
-                                    <ul className="space-y-2 mb-4">
-                                          {navLinks.map((link) => (
-                                                <li key={link.path}>
-                                                      <NavLink
-                                                            to={link.path}
-                                                            onClick={() => setShowMobileMenu(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
-                                                      >
-                                                            <link.icon className="w-5 h-5" />
-                                                            <span className="font-medium">{link.label}</span>
-                                                      </NavLink>
-                                                </li>
-                                          ))}
-                                          {user && (
-                                                <li>
-                                                      <NavLink
-                                                            to="/my-activities"
-                                                            onClick={() => setShowMobileMenu(false)}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
-                                                      >
-                                                            <Activity className="w-5 h-5" />
-                                                            <span className="font-medium">My Activities</span>
-                                                      </NavLink>
-                                                </li>
-                                          )}
-                                    </ul>
+                                    <hr className="my-2" />
 
-                                    {/* User Menu (Mobile) */}
-                                    {user && (
-                                          <div className="border-t border-gray-200 pt-4 mb-4">
-                                                <div className="space-y-2">
-                                                      <div
-                                                            onClick={() => handleNavigation("/dashboard")}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                      >
-                                                            <LayoutDashboard className="w-5 h-5" />
-                                                            <span className="font-medium">Dashboard</span>
-                                                      </div>
-                                                      <div
-                                                            onClick={() => handleNavigation("/my-challenges")}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                      >
-                                                            <Target className="w-5 h-5" />
-                                                            <span className="font-medium">My Challenges</span>
-                                                      </div>
-                                                      <div
-                                                            onClick={() => handleNavigation("/profile")}
-                                                            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-50 hover:text-green-600 cursor-pointer transition-colors"
-                                                      >
-                                                            <User className="w-5 h-5" />
-                                                            <span className="font-medium">User Profile</span>
+                                    {user ? (
+                                          <>
+                                                <div className="flex items-center gap-3 mb-4">
+                                                      <img
+                                                            src={user.photoURL || profileImg}
+                                                            alt="profile"
+                                                            className="w-10 h-10 rounded-full border-2 border-green-600"
+                                                      />
+                                                      <div>
+                                                            <p className="font-semibold text-gray-800">
+                                                                  {user.displayName}
+                                                            </p>
+                                                            <p className="text-sm text-gray-500">{user.email}</p>
                                                       </div>
                                                 </div>
-                                          </div>
-                                    )}
-
-                                    {/* Auth Buttons (Mobile) */}
-                                    <div className="border-t border-gray-200 pt-4 space-y-3">
-                                          {user ? (
                                                 <button
                                                       onClick={handleLogout}
-                                                      className="w-full btn flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700"
+                                                      className="flex items-center gap-2 hover:text-red-900 cursor-pointer text-red-600 font-semibold"
                                                 >
-                                                      <LogOut className="w-5 h-5" />
-                                                      Logout
+                                                      <LogOut size={18} /> Logout
                                                 </button>
-                                          ) : (
-                                                <>
-                                                      <button
-                                                            onClick={() => handleNavigation("/sign")}
-                                                            className="w-full btn flex items-center justify-center gap-2"
-                                                      >
-                                                            <LogIn className="w-5 h-5" />
-                                                            Login
-                                                      </button>
-                                                      <button
-                                                            onClick={() => handleNavigation("/register")}
-                                                            className="w-full btn flex items-center justify-center gap-2"
-                                                      >
-                                                            <UserPlus className="w-5 h-5" />
-                                                            Register
-                                                      </button>
-                                                </>
-                                          )}
-                                    </div>
-                              </div>
+                                          </>
+                                    ) : (
+                                          <div className="flex flex-col gap-2">
+                                                <button onClick={() => navigate("/sign")} className="btn w-full">
+                                                      <LogIn size={18} /> Login
+                                                </button>
+                                                <button onClick={() => navigate("/register")} className="btn w-full">
+                                                      <UserPlus size={18} /> Register
+                                                </button>
+                                          </div>
+                                    )}
+                              </ul>
                         </div>
                   )}
-            </header>
+            </>
       );
 };
 
