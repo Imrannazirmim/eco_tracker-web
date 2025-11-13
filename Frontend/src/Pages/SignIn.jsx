@@ -7,7 +7,7 @@ import Loading from "../Components/Utils/Loading";
 import { Eye, EyeOff } from "lucide-react";
 
 const SignIn = () => {
-      const {  signInUser, googleSignUser } = useContext(AuthContext);
+      const { signInUser, googleSignUser } = useContext(AuthContext);
       const navigate = useNavigate();
       const [loading, setLoading] = useState(false);
       const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +17,6 @@ const SignIn = () => {
             password: "",
       });
       const [error, setError] = useState({});
-
 
       const validateForm = () => {
             const newErrors = {};
@@ -117,12 +116,16 @@ const SignIn = () => {
                                     <div className="relative">
                                           <label className="text-green-700 font-medium flex justify-between mb-1">
                                                 <span>Password</span>
-                                                <Link
-                                                      to="/forget-password"
-                                                      className="text-sm text-green-600 underline hover:text-green-700"
+                                                <span
+                                                      onClick={() =>
+                                                            navigate("/forget-password", {
+                                                                  state: { email: formData.email },
+                                                            })
+                                                      }
+                                                      className="text-sm text-green-600 underline cursor-pointer hover:text-green-700"
                                                 >
                                                       Forgot Password?
-                                                </Link>
+                                                </span>
                                           </label>
                                           <input
                                                 type={showPassword ? "text" : "password"}

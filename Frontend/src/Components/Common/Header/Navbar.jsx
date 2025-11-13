@@ -75,7 +75,9 @@ const Navbar = () => {
                   await logoutUser();
                   setShowMobileMenu(false);
                   setShowMenu(false);
-                  navigate("/sign");
+                  setTimeout(() => {
+                        navigate("/sign");
+                  }, 2000);
             } catch (error) {
                   toast.error(error.message);
             } finally {
@@ -272,10 +274,16 @@ const Navbar = () => {
                                           </>
                                     ) : (
                                           <div className="flex  mx-auto  gap-2">
-                                                <button onClick={() => navigate("/sign")} className="flex  items-center gap-4 btn  w-full">
+                                                <button
+                                                      onClick={() => navigate("/sign")}
+                                                      className="flex  items-center gap-4 btn  w-full"
+                                                >
                                                       <LogIn size={18} /> Login
                                                 </button>
-                                                <button onClick={() => navigate("/register")} className="flex  items-center gap-4 btn  w-full">
+                                                <button
+                                                      onClick={() => navigate("/register")}
+                                                      className="flex  items-center gap-4 btn  w-full"
+                                                >
                                                       <UserPlus size={18} /> Register
                                                 </button>
                                           </div>

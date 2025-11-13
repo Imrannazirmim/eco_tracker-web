@@ -50,7 +50,7 @@ const MyChallenges = () => {
                         <button className="btn">Ongoing</button>
                         <button className="btn">Completed</button>
                   </div>
-                  <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {data?.map((item) => (
                               <div key={item._id} className="shadow rounded-b-md">
                                     <img
@@ -79,7 +79,7 @@ const MyChallenges = () => {
                                           </div>
                                     </div>
                                     <div className="flex justify-end p-4 gap-8">
-                                          <button className="btn">Update</button>
+                                          <button className="py-2 px-4  rounded-md bg-pink-500 font-semibold hover:bg-pink-400 text-white">Update</button>
                                           <button
                                                 onClick={() => navigate(`/challenges/${item.challengeId}`)}
                                                 className="btn"
