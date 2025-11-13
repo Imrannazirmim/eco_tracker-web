@@ -66,13 +66,25 @@ const Home = () => {
                   const challengesRes = await axiosSecure.get("/api/challenges?status=active");
                   setChallenges(challengesRes.data.slice(0, 6));
 
-                  // Fetch events
-                  const eventsRes = await axiosSecure.get("/api/events?upcoming=true");
-                  setEvents(eventsRes.data.slice(0, 3));
+                  // Try to fetch events (optional)
+                  try {
+                        const eventsRes = await axiosSecure.get("/api/events?upcoming=true");
+                        setEvents(eventsRes.data.slice(0, 3));
+                  } catch (eventError) {
+                        setEvents([]);
+                        throw new Error(eventError.message);
+                  }
 
-                  // Fetch tips
-                  const tipsRes = await axiosSecure.get("/api/tips");
-                  setTips(tipsRes.data.slice(0, 3));
+                  // Try to fetch tips (optional)
+                  try {
+                        const tipsRes = await axiosSecure.get("/api/tips");
+                        setTips(tipsRes.data.slice(0, 3));
+                  } catch (tipError) {
+                        
+                        setTips([]);
+                        throw new Error(tipError.message);
+
+                  }
 
                   // Calculate stats
                   setStats({
@@ -82,7 +94,7 @@ const Home = () => {
                         treesPlanted: 5832,
                   });
             } catch (error) {
-                  console.error("Error fetching data:", error);
+                  throw new Error(error)
             }
       };
 
@@ -310,7 +322,7 @@ const Home = () => {
                                                             key={tip.id}
                                                             className="flex items-start space-x-4 bg-white p-4 rounded-lg hover:shadow-md transition-shadow"
                                                       >
-                                                            <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                                            <div className="shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                                                                   <span className="text-green-600 font-semibold">
                                                                         {index + 1}
                                                                   </span>
@@ -416,7 +428,7 @@ const Home = () => {
                                                       },
                                                 ].map((item, index) => (
                                                       <div key={index} className="flex items-start space-x-3">
-                                                            <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                                                            <CheckCircle className="w-6 h-6 text-green-500 shrink-0 mt-1" />
                                                             <div>
                                                                   <h3 className="font-semibold text-gray-900 mb-1">
                                                                         {item.title}
@@ -455,7 +467,7 @@ const Home = () => {
                                                       const Icon = item.icon;
                                                       return (
                                                             <div key={item.step} className="flex items-start space-x-4">
-                                                                  <div className="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                                                                  <div className="shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
                                                                         <Icon className="w-6 h-6 text-white" />
                                                                   </div>
                                                                   <div>
@@ -474,7 +486,6 @@ const Home = () => {
                               </div>
                         </div>
                   </section>
-
             </div>
       );
 };
