@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Swal from "sweetalert2";
 import { Plus, Search, X, Lightbulb } from "lucide-react";
 import { AuthContext } from "../Contexts/RootContext";
@@ -20,7 +20,7 @@ const Tips = () => {
       const [selectedTip, setSelectedTip] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
       const [categoryFilter, setCategoryFilter] = useState("all");
-      const [likedTips, setLikedTips] = useState(new Set());
+      // const [likedTips, setLikedTips] = useState(new Set());
 
       const categories = [
             "all",
@@ -114,18 +114,18 @@ const Tips = () => {
             }
       };
 
-      const handleLikeTip = async (tipId) => {
-            if (likedTips.has(tipId)) return Swal.fire("Info", "You already liked this tip!", "info");
+      // const handleLikeTip = async (tipId) => {
+      //       if (likedTips.has(tipId)) return Swal.fire("Info", "You already liked this tip!", "info");
 
-            try {
-                  const tip = tips.find((t) => t._id === tipId);
-                  await axiosSecure.patch(`/api/tips/${tipId}`, { likes: tip.likes + 1 });
-                  setLikedTips(new Set([...likedTips, tipId]));
-                  fetchTips();
-            } catch (err) {
-                  Swal.fire("Error", "Failed to like tip",err);
-            }
-      };
+      //       try {
+      //             const tip = tips.find((t) => t._id === tipId);
+      //             await axiosSecure.patch(`/api/tips/${tipId}`, { likes: tip.likes + 1 });
+      //             setLikedTips(new Set([...likedTips, tipId]));
+      //             fetchTips();
+      //       } catch (err) {
+      //             throw new Error(err);
+      //       }
+      // };
 
       const openEditModal = (tip) => {
             setSelectedTip(tip);
@@ -205,8 +205,6 @@ const Tips = () => {
                                                 tip={tip}
                                                 onEdit={openEditModal}
                                                 onDelete={handleDeleteTip}
-                                                onLike={handleLikeTip}
-                                                liked={likedTips.has(tip._id)}
                                           />
                                     ))}
                               </div>
