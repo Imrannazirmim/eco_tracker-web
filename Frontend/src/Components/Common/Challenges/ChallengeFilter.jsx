@@ -13,7 +13,7 @@ const categories = [
 ];
 
 const ChallengeFilters = ({ filters, setFilters, resetFilters, user, onCreate }) => (
-  <aside className="lg:w-72 bg-white rounded-lg shadow-sm p-6 space-y-6 sticky top-4">
+  <aside className="lg:w-72 bg-white rounded-lg shadow-sm p-6 space-y-6  top-4">
     <div className="flex justify-between items-center">
       <h3 className="font-semibold text-gray-900 text-lg">Filters</h3>
       <button onClick={resetFilters} className="text-sm text-green-600 font-medium hover:underline">

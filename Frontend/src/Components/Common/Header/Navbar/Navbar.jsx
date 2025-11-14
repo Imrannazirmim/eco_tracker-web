@@ -15,7 +15,6 @@ const Navbar = () => {
       const [showMenu, setShowMenu] = useState(false);
       const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-    //   const axiosInstance = useAxiosSecure();
       const [loading, setLoading] = useState(false);
       const navigate = useNavigate();
 
@@ -49,8 +48,7 @@ const Navbar = () => {
             <>
                   <ToastContainer />
 
-                  {/* Top Navbar */}
-                  <header className="w-full bg-white sticky top-0 shadow-md z-50">
+                  <header className="w-full bg-white sticky top-0  z-50">
                         <nav className="flex justify-between items-center py-4 px-6 md:px-20">
                               {/* Logo */}
                               <div

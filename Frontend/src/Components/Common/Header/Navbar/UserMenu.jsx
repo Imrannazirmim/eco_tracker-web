@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Activity, Trophy, LogOut } from "lucide-react";
+import { CgProfile } from "react-icons/cg";
 
-const UserMenu = ({ user, showMenu, setShowMenu, handleNavigation, handleLogout }) => {
+const UserMenu = ({ user, showMenu, setShowMenu, handleNavigation}) => {
       useEffect(() => {
             const close = () => setShowMenu(false);
             document.addEventListener("click", close);
@@ -12,15 +13,13 @@ const UserMenu = ({ user, showMenu, setShowMenu, handleNavigation, handleLogout 
       return (
             <div
                   className="fixed right-6 top-20 bg-green-900 text-white rounded-xl shadow-xl w-64 p-4 z-50 border border-green-700"
-                  onClick={(e) => e.stopPropagation()} // Keep menu open when clicking inside
+                  onClick={(e) => e.stopPropagation()} 
             >
-                  {/* User Info */}
                   <div className="pb-3 border-b border-green-700">
                         <h2 className="font-semibold truncate">{user?.displayName || "User"}</h2>
                         <p className="text-sm text-green-200 truncate">{user?.email}</p>
                   </div>
 
-                  {/* Menu Items */}
                   <div className="flex flex-col mt-3">
                         <button
                               className="flex items-center gap-2 p-2 hover:bg-green-800 rounded-lg"
@@ -51,20 +50,10 @@ const UserMenu = ({ user, showMenu, setShowMenu, handleNavigation, handleLogout 
                                     setShowMenu(false);
                               }}
                         >
-                              <img src="/default-avatar.png" alt="" className="w-4 h-4" />
+                              <CgProfile />
                               Profile
                         </button>
 
-                        <button
-                              className="flex items-center gap-2 p-2 text-red-400 hover:bg-red-900 rounded-lg mt-2"
-                              onClick={() => {
-                                    handleLogout();
-                                    setShowMenu(false);
-                              }}
-                        >
-                              <LogOut className="w-4 h-4" />
-                              Logout
-                        </button>
                   </div>
             </div>
       );
