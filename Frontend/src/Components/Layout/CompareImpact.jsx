@@ -7,7 +7,7 @@ const CompareImpact = ({ activities }) => {
 
   const userImpact = cleanProgress.reduce((a, b) => a + b, 0);
 
-  const communityAvg = 55; // optional static for now
+  const communityAvg = 55; 
 
   return (
     <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">

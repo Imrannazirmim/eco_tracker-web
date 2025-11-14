@@ -25,9 +25,6 @@ const calculateDuration = (startDate, endDate) => {
 const ChallengeCard = ({ challenge, onUpdate, onViewDetails }) => {
       const navigate = useNavigate();
 
-      // Determine the correct ID to use for navigation
-      // If challengeId exists, it's from MyChallenges (user_challenges collection)
-      // Otherwise use _id from challenges collection
       const getChallengeId = () => {
             return challenge.challengeId || challenge._id;
       };
@@ -40,12 +37,10 @@ const ChallengeCard = ({ challenge, onUpdate, onViewDetails }) => {
             }
       };
 
-      // Check if this is from MyChallenges (has onUpdate prop)
       const isMyChallenge = !!onUpdate;
 
       return (
             <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col">
-                  {/* Image Section */}
                   <div className="relative h-48 overflow-hidden shrink-0">
                         <img
                               src={
@@ -65,7 +60,6 @@ const ChallengeCard = ({ challenge, onUpdate, onViewDetails }) => {
                               </span>
                         </div>
 
-                        {/* Show progress badge for MyChallenges */}
                         {isMyChallenge && (
                               <div className="absolute top-4 right-4">
                                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white text-gray-700 shadow-md">
@@ -75,7 +69,6 @@ const ChallengeCard = ({ challenge, onUpdate, onViewDetails }) => {
                         )}
                   </div>
 
-                  {/* Content */}
                   <div className="p-5 flex flex-col grow">
                         <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2 min-h-14">
                               {challenge.title || challenge.challengeTitle}
@@ -93,7 +86,6 @@ const ChallengeCard = ({ challenge, onUpdate, onViewDetails }) => {
                               </div>
                         </div>
 
-                        {/* Buttons */}
                         {isMyChallenge ? (
                               <div className="flex gap-2">
                                     <button

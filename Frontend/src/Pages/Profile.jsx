@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../Contexts/RootContext";
-// Removed: import { Sidebar } from "lucide-react"; // This was conflicting with custom Sidebar
 import AccountTab from "../Components/Common/Profile/AccountTab";
 import PersonalTab from "../Components/Common/Profile/PersonalTab";
 import { Sidebar } from "../Components/Common/Profile/Sidebar";

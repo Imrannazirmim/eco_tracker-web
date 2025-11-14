@@ -16,7 +16,6 @@ const AuthProvider = ({ children }) => {
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
       const googleProvider = new GoogleAuthProvider();
-      //create account
       const createUserAccount = async (email, password, name, photoUrl) => {
             setLoading(true);
             setError(null);
@@ -37,7 +36,6 @@ const AuthProvider = ({ children }) => {
             }
       };
 
-      //sign in user
 
       const signInUser = async (email, password) => {
             setLoading(true), setError(null);
@@ -53,7 +51,6 @@ const AuthProvider = ({ children }) => {
             }
       };
 
-      //google sign in
 
       const googleSignUser = async () => {
             setLoading(true); setError(null);

@@ -1,7 +1,6 @@
 import React from "react";
 
 const TipForm = React.memo(({ formData, setFormData, categories }) => {
-      console.log("TipForm rendered"); // test
       return (
             <div className="space-y-4">
                   <div>

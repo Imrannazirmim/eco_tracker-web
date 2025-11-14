@@ -3,7 +3,6 @@ import React from "react";
 const ChallengeHeader = ({ category, secondaryTag, title }) => {
   return (
     <>
-      {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {category && (
           <span className="px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">

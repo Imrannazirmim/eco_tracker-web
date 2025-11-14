@@ -33,7 +33,6 @@ const ForgetPassword = () => {
             } finally {
                   setIsSubmitting(false);
             }
-            // setEmail("");
             setTimeout(() => {
                   navigate("/sign");
             }, 5000);

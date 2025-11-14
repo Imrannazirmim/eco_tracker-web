@@ -20,7 +20,6 @@ const Tips = () => {
       const [selectedTip, setSelectedTip] = useState(null);
       const [searchTerm, setSearchTerm] = useState("");
       const [categoryFilter, setCategoryFilter] = useState("all");
-      // const [likedTips, setLikedTips] = useState(new Set());
 
       const categories = [
             "all",

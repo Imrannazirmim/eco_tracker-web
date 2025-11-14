@@ -8,7 +8,7 @@ const CommunityGoal = ({ goal }) => {
   const goalText = goal.goal || "No goal set";
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-6 mb-6">
+    <div className="bg-linear-to-br from-green-50 to-blue-50 rounded-xl p-6 mb-6">
       <div className="flex justify-between items-center mb-3">
         <h4 className="font-bold text-gray-900">Community Goal</h4>
         <span className="text-green-600 font-bold">

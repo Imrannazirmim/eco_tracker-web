@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import Loading from "../../Utils/Loading";
 
 const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
       const [progress, setProgress] = useState(challenge.progress || 0);
@@ -21,12 +20,10 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                   setIsUpdating(false);
             }
       };
-      console.log(challenge);
 
       return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                   <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
-                        {/* Header */}
                         <div className="flex justify-between items-center p-6 border-b border-gray-200">
                               <h2 className="text-2xl font-bold text-gray-900">Update Progress</h2>
                               <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -34,9 +31,7 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                               </button>
                         </div>
 
-                        {/* Form */}
                         <form onSubmit={handleSubmit} className="p-6">
-                              {/* Challenge Name */}
                               <div className="mb-6">
                                     <h3 className="font-semibold text-gray-900 mb-2">
                                           {challenge.challengeTitle || challenge.title}
@@ -46,7 +41,6 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                                     </p>
                               </div>
 
-                              {/* Progress Slider */}
                               <div className="mb-6">
                                     <label className="block text-sm font-medium text-gray-700 mb-3">
                                           New Progress: {progress}%
@@ -68,7 +62,6 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                                     </div>
                               </div>
 
-                              {/* Progress Bar Preview */}
                               <div className="mb-6">
                                     <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
                                     <div className="w-full bg-gray-200 rounded-full h-3">
@@ -79,7 +72,6 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                                     </div>
                               </div>
 
-                              {/* Quick Select Buttons */}
                               <div className="mb-6">
                                     <p className="text-sm font-medium text-gray-700 mb-2">Quick Select:</p>
                                     <div className="flex gap-2">
@@ -100,7 +92,6 @@ const UpdateProgressModal = ({ challenge, onClose, onUpdate }) => {
                                     </div>
                               </div>
 
-                              {/* Action Buttons */}
                               <div className="flex gap-3">
                                     <button
                                           type="button"

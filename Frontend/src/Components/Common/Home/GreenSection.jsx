@@ -67,7 +67,6 @@ const GreenSection = () => {
             </div>
           </div>
 
-          {/* How It Works */}
           <div className="bg-linear-to-br from-green-50 to-blue-50 rounded-2xl p-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">How It Works</h2>
             <div className="space-y-6">

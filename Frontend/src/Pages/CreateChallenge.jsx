@@ -67,20 +67,17 @@ const CreateChallenge = () => {
       const handleSubmit = async (e) => {
             e.preventDefault();
 
-            // Check if user is authenticated
             if (!user || !user.email) {
                   toast.error("You must be logged in to create a challenge.");
                   navigate("/login");
                   return;
             }
 
-            // Validate required fields
             if (!formData.title || !formData.category || !formData.startDate || !formData.endDate) {
                   toast.error("Title, category, and dates are required.");
                   return;
             }
 
-            // Calculate duration
             const start = new Date(formData.startDate);
             const end = new Date(formData.endDate);
             const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
@@ -90,45 +87,33 @@ const CreateChallenge = () => {
                   return;
             }
 
-            // Prepare data
             const submitData = {
                   ...formData,
                   duration,
                   howToParticipate: formData.howToParticipate.split("\n").filter((item) => item.trim() !== ""),
-                  createdBy: user.email, // Use actual logged-in user email
-                  status: "active", // Add status field
+                  createdBy: user.email,
+                  status: "active", 
             };
 
-            // Trim goal
             submitData.communityGoal.goal = submitData.communityGoal.goal.trim();
 
             setLoading(true);
 
             try {
-                  console.log("Submitting challenge data:", submitData);
 
-                  const response = await axiosInstance.post("/api/challenges", submitData);
+                  await axiosInstance.post("/api/challenges", submitData);
 
-                  console.log("Challenge created successfully:", response.data);
                   toast.success("Challenge created successfully!");
                   navigate("/challenges");
             } catch (error) {
-                  console.error("Error creating challenge:", error);
 
-                  // Detailed error handling
                   if (error.response) {
-                        // Server responded with error
-                        console.error("Error response:", error.response.data);
                         toast.error(
                               error.response.data.message || `Failed to create challenge: ${error.response.status}`
                         );
                   } else if (error.request) {
-                        // Request made but no response
-                        console.error("No response received:", error.request);
                         toast.error("No response from server. Please check your connection.");
                   } else {
-                        // Error setting up request
-                        console.error("Error setting up request:", error.message);
                         toast.error("Failed to create challenge: " + error.message);
                   }
             } finally {
@@ -143,7 +128,6 @@ const CreateChallenge = () => {
       return (
             <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
                   <div className="max-w-4xl mx-auto">
-                        {/* Header */}
                         <div className="flex justify-between items-start mb-8">
                               <div>
                                     <h1 className="text-3xl font-bold text-gray-900">Create a New Challenge</h1>
@@ -162,7 +146,6 @@ const CreateChallenge = () => {
 
                         {/* Form */}
                         <form onSubmit={handleSubmit} className="bg-white shadow-sm rounded-xl p-8 space-y-8">
-                              {/* Title, Category, and Secondary Tag Row */}
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
                                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -212,7 +195,6 @@ const CreateChallenge = () => {
                                     </div>
                               </div>
 
-                              {/* Description */}
                               <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                           Detailed Description
@@ -227,7 +209,6 @@ const CreateChallenge = () => {
                                     />
                               </div>
 
-                              {/* Dates Row */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -269,7 +250,6 @@ const CreateChallenge = () => {
                                     </div>
                               </div>
 
-                              {/* Image URL */}
                               <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                           Challenge Image URL
@@ -317,7 +297,6 @@ const CreateChallenge = () => {
                                     </div>
                               </div>
 
-                              {/* How to Participate */}
                               <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                           How to Participate
@@ -351,7 +330,6 @@ Log your miles daily..."
                                     />
                               </div>
 
-                              {/* Community Goal Section */}
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div>
                                           <label className="block text-sm font-medium text-gray-700 mb-2">

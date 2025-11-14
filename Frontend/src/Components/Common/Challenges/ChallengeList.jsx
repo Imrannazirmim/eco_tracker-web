@@ -9,7 +9,6 @@ const ChallengeList = ({ challenges, resetFilters }) => {
   const start = (currentPage - 1) * itemsPerPage;
   const current = challenges.slice(start, start + itemsPerPage);
 
-  console.log(current);
   
   const paginate = (page) => {
     setCurrentPage(page);
@@ -38,7 +37,6 @@ const ChallengeList = ({ challenges, resetFilters }) => {
         ))}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-8">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (

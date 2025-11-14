@@ -12,7 +12,6 @@ import Register from "../Pages/Register.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ChallengeDetails from "../Components/Layout/ChallengeDetails.jsx";
 import { Suspense } from "react";
-import Dashboard from "../Pages/Dashboard.jsx";
 import Loading from "../Components/Utils/Loading.jsx";
 import Profile from "../Pages/Profile.jsx";
 import CreateChallenge from "../Pages/CreateChallenge.jsx";
@@ -74,16 +73,7 @@ const router = createBrowserRouter([
                               </Suspense>
                         ),
                   },
-                  {
-                        path: "dashboard",
-                        element: (
-                              <Suspense fallback={<Loading />}>
-                                    <PrivateRoute>
-                                          <Dashboard />
-                                    </PrivateRoute>
-                              </Suspense>
-                        ),
-                  },
+                
                   {
                         path: "profile",
                         element: (

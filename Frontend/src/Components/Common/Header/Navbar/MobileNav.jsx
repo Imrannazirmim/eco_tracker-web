@@ -45,14 +45,14 @@ const MobileNav = ({ user, navLinks, handleNavigation, handleLogout }) => {
                               <div className="flex items-center gap-2">
                                     <button
                                           onClick={() => handleNavigation("/sign")}
-                                          className="flex items-center cursor-pointer py-1 px-6 rounded-2xl hover:bg-green-500 mx-auto bg-green-600  text-white"
+                                          className="flex items-center cursor-pointer py-1 px-6 gap-2 rounded-2xl hover:bg-green-500 mx-auto bg-green-600  text-white"
                                     >
                                           <LogIn size={18} /> Login
                                     </button>
 
                                     <button
                                           onClick={() => handleNavigation("/register")}
-                                          className="flex items-center cursor-pointer py-1 px-6 rounded-2xl hover:bg-green-500 mx-auto bg-green-600  text-white"
+                                          className="flex items-center cursor-pointer py-1 px-6 gap-2 rounded-2xl hover:bg-green-500 mx-auto bg-green-600  text-white"
                                     >
                                           <UserPlus size={18} /> Register
                                     </button>

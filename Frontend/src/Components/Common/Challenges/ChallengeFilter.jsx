@@ -21,7 +21,6 @@ const ChallengeFilters = ({ filters, setFilters, resetFilters, user, onCreate })
       </button>
     </div>
 
-    {/* Category */}
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
       <select
@@ -35,7 +34,6 @@ const ChallengeFilters = ({ filters, setFilters, resetFilters, user, onCreate })
       </select>
     </div>
 
-    {/* Duration */}
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">Challenge Duration</label>
       {["all", "week", "month", "3months"].map((range) => (
@@ -55,7 +53,6 @@ const ChallengeFilters = ({ filters, setFilters, resetFilters, user, onCreate })
       ))}
     </div>
 
-    {/* Participants */}
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">Participants</label>
       <select

@@ -5,15 +5,11 @@ import InputField from "../Components/Auth/InputField";
 import PasswordInput from "../Components/Auth/PasswordInput";
 import GoogleSignInButton from "../Components/Auth/GoogleSignInButton";
 import { toast, ToastContainer } from "react-toastify";
-import { getAuth } from "firebase/auth";
 
 const SignIn = () => {
       const { signInUser, googleSignUser } = useContext(AuthContext);
       const [loading, setLoading] = useState(false);
       const navigate = useNavigate();
-      const auth = getAuth();
-      const user = auth.currentUser;
-      console.log(user);
 
       const [formData, setFormData] = useState({
             email: "",

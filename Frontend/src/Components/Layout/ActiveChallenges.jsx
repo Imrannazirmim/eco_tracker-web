@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 const ActiveChallenges = ({ activities }) => {
       const navigate = useNavigate();
 
-      console.log(activities);
 
       return (
             <div className="mt-10">

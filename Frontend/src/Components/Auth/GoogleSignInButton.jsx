@@ -1,4 +1,4 @@
-const GoogleSignInButton = ({ onClick, disabled, loading }) => {
+const GoogleSignInButton = ({ onClick, disabled }) => {
   return (
     <button
       onClick={onClick}

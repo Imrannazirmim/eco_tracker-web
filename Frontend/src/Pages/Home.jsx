@@ -27,7 +27,6 @@ const Home = () => {
       const fetchData = async () => {
             setLoading(true);
             try {
-                  // Fetch all data in parallel for better performance
                   const [challengesRes, statsRes] = await Promise.all([
                         axiosSecure.get("/api/challenges"),
                         axiosSecure.get("/api/stats"),
@@ -44,7 +43,6 @@ const Home = () => {
                         });
                   }
 
-                  // Fetch events
                   try {
                         const eventsRes = await axiosSecure.get("/api/events?upcoming=true");
                         setEvents(eventsRes.data.slice(0, 3));
@@ -53,7 +51,6 @@ const Home = () => {
                         setEvents([]);
                   }
 
-                  // Fetch tips
                   try {
                         const tipsRes = await axiosSecure.get("/api/tips");
                         setTips(tipsRes.data.slice(0, 3));

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import {  RxCross1 } from "react-icons/rx";
+import { RxCross1 } from "react-icons/rx";
 import { Home, Trophy, Calendar, Lightbulb, MenuIcon } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthContext } from "../../../../Contexts/RootContext";
@@ -36,7 +36,9 @@ const Navbar = () => {
             try {
                   await logoutUser();
                   toast.success("Logged out!");
-                  navigate("/sign");
+                  setTimeout(() => {
+                        navigate("/sign");
+                  }, 2000);
             } finally {
                   setLoading(false);
             }

@@ -1,28 +1,20 @@
 // SkeletonLoader.jsx - Custom skeleton loaders using react-loading-skeleton
 
-import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-// Challenge Card Skeleton
 export const ChallengeCardSkeleton = () => {
       return (
             <div className="shadow rounded-b-md">
-                  {/* Image skeleton */}
                   <Skeleton height={208} className="rounded-t-md" />
 
-                  {/* Content skeleton */}
                   <div className="flex flex-col mt-4 mb-4 gap-2 px-4">
-                        {/* Category */}
                         <Skeleton width={100} height={12} />
 
-                        {/* Title */}
                         <Skeleton width="80%" height={20} />
 
-                        {/* Divider */}
                         <hr className="text-gray-200" />
 
-                        {/* Duration with icon */}
                         <div className="flex items-center gap-2">
                               <Skeleton circle width={16} height={16} />
                               <Skeleton width={80} height={16} />
@@ -32,7 +24,6 @@ export const ChallengeCardSkeleton = () => {
       );
 };
 
-// Multiple Challenge Cards Skeleton
 export const ChallengeGridSkeleton = ({ count = 8 }) => {
       return (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -43,7 +34,6 @@ export const ChallengeGridSkeleton = ({ count = 8 }) => {
       );
 };
 
-// Event Card Skeleton
 export const EventCardSkeleton = () => {
       return (
             <div className="bg-white p-5 rounded-lg shadow-sm">
@@ -57,7 +47,6 @@ export const EventCardSkeleton = () => {
       );
 };
 
-// Events List Skeleton
 export const EventsListSkeleton = ({ count = 3 }) => {
       return (
             <div className="space-y-4">
@@ -148,99 +137,27 @@ export const ActivitiesGridSkeleton = ({ count = 4 }) => {
       );
 };
 
-// Table Row Skeleton (for My Challenges)
-export const TableRowSkeleton = () => {
-      return (
-            <tr className="border-b border-gray-200">
-                  <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                              <Skeleton width={48} height={48} className="rounded-lg" />
-                              <div>
-                                    <Skeleton width={200} height={20} className="mb-2" />
-                                    <Skeleton width={120} height={16} />
-                              </div>
-                        </div>
-                  </td>
-                  <td className="px-6 py-4">
-                        <Skeleton width={80} height={24} borderRadius={20} />
-                  </td>
-                  <td className="px-6 py-4">
-                        <Skeleton width={100} height={16} />
-                  </td>
-                  <td className="px-6 py-4">
-                        <Skeleton width="100%" height={8} borderRadius={20} className="mb-2" />
-                        <Skeleton width={60} height={16} />
-                  </td>
-                  <td className="px-6 py-4">
-                        <div className="flex space-x-2">
-                              <Skeleton width={80} height={36} />
-                              <Skeleton width={80} height={36} />
-                        </div>
-                  </td>
-            </tr>
-      );
-};
-
-// Table Skeleton
-export const TableSkeleton = ({ rows = 5 }) => {
-      return (
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                  <table className="min-w-full">
-                        <thead className="bg-gray-50">
-                              <tr>
-                                    {["Challenge", "Status", "Role", "Progress", "Actions"].map((_, i) => (
-                                          <th key={i} className="px-6 py-4 text-left">
-                                                <Skeleton width={100} height={16} />
-                                          </th>
-                                    ))}
-                              </tr>
-                        </thead>
-                        <tbody>
-                              {Array.from({ length: rows }).map((_, index) => (
-                                    <TableRowSkeleton key={index} />
-                              ))}
-                        </tbody>
-                  </table>
-            </div>
-      );
-};
-
-// Page Header Skeleton
-export const PageHeaderSkeleton = () => {
-      return (
-            <div className="mb-8">
-                  <Skeleton width={300} height={40} className="mb-3" />
-                  <Skeleton width={450} height={20} />
-            </div>
-      );
-};
-
 // Challenge Details Skeleton
 export const ChallengeDetailsSkeleton = () => {
       return (
             <div className="min-h-screen bg-gray-50 py-8">
                   <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                        {/* Hero Image */}
                         <Skeleton height={384} className="rounded-2xl mb-8" />
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                              {/* Main Content */}
                               <div className="lg:col-span-2 space-y-6">
                                     <Skeleton width="75%" height={40} />
 
-                                    {/* Category badges */}
                                     <div className="flex space-x-3">
                                           <Skeleton width={120} height={32} borderRadius={20} />
                                           <Skeleton width={100} height={32} borderRadius={20} />
                                     </div>
 
-                                    {/* Description */}
                                     <div className="bg-white rounded-xl p-6">
                                           <Skeleton width={180} height={24} className="mb-4" />
                                           <Skeleton count={3} height={16} className="mb-2" />
                                     </div>
 
-                                    {/* How to participate */}
                                     <div className="bg-white rounded-xl p-6">
                                           <Skeleton width={220} height={24} className="mb-4" />
                                           {[1, 2, 3, 4].map((i) => (
@@ -282,31 +199,6 @@ export const ChallengeDetailsSkeleton = () => {
       );
 };
 
-// Stats Card Skeleton (Dashboard)
-export const StatsCardSkeleton = () => {
-      return (
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                        <Skeleton circle width={48} height={48} />
-                        <Skeleton width={60} height={24} borderRadius={20} />
-                  </div>
-                  <Skeleton width={100} height={32} className="mb-2" />
-                  <Skeleton width={140} height={16} />
-            </div>
-      );
-};
-
-// Stats Grid Skeleton
-export const StatsGridSkeleton = ({ count = 4 }) => {
-      return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {Array.from({ length: count }).map((_, index) => (
-                        <StatsCardSkeleton key={index} />
-                  ))}
-            </div>
-      );
-};
-
 export default {
       ChallengeCardSkeleton,
       ChallengeGridSkeleton,
@@ -316,10 +208,6 @@ export default {
       TipsListSkeleton,
       ActivityCardSkeleton,
       ActivitiesGridSkeleton,
-      TableRowSkeleton,
-      TableSkeleton,
-      PageHeaderSkeleton,
+
       ChallengeDetailsSkeleton,
-      StatsCardSkeleton,
-      StatsGridSkeleton,
 };

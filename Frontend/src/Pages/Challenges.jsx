@@ -9,12 +9,11 @@ import ChallengeModal from "../Components/Common/Challenges/ChallengeModal";
 
 const Challenges = () => {
       const { user } = useContext(AuthContext);
-      const { challenges, filteredChallenges, loading, filters, setFilters, resetFilters, fetchChallenges } =
+      const {  filteredChallenges, loading, filters, setFilters, resetFilters, fetchChallenges } =
             useChallenges();
 
       const [showCreateModal, setShowCreateModal] = useState(false);
 
-      console.log(challenges);
 
       useEffect(() => {
             fetchChallenges();
@@ -47,7 +46,6 @@ const Challenges = () => {
                         </div>
 
                         <div className="flex flex-col lg:flex-row gap-6">
-                              {/* Filters */}
                               <ChallengeFilters
                                     user={user}
                                     filters={filters}
@@ -56,12 +54,10 @@ const Challenges = () => {
                                     onCreate={() => setShowCreateModal(true)}
                               />
 
-                              {/* Challenge List */}
                               <ChallengeList challenges={filteredChallenges} resetFilters={resetFilters} />
                         </div>
                   </div>
 
-                  {/* Create Modal */}
                   {showCreateModal && (
                         <ChallengeModal onClose={() => setShowCreateModal(false)} onCreated={fetchChallenges} />
                   )}
