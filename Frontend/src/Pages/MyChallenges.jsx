@@ -1,96 +1,161 @@
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Loading from "../Components/Utils/Loading";
 import { useNavigate } from "react-router";
+import MyChallengesHeader from "../Components/Common/MyChallenges/MyChallengesHeader";
+import FilterButtons from "../Components/Common/MyChallenges/FilterButtons";
+import EmptyState from "../Components/Common/MyChallenges/EmptyState";
+import ChallengeCard from "../Components/Common/Challenges/ChallengeCard";
+import UpdateProgressModal from "../Components/Common/MyChallenges/UpdateProgressModal";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const MyChallenges = () => {
       const [data, setData] = useState([]);
-      const auth = getAuth();
+      const [filteredData, setFilteredData] = useState([]);
+      const [activeFilter, setActiveFilter] = useState("All");
       const [loading, setLoading] = useState(true);
+      const [selectedChallenge, setSelectedChallenge] = useState(null);
+      const [isModalOpen, setIsModalOpen] = useState(false);
+
+      const auth = getAuth();
       const axiosInstance = useAxiosSecure();
       const user = auth.currentUser;
       const navigate = useNavigate();
 
       useEffect(() => {
-            const loadingActivities = async () => {
-                  console.log(user);
+            const loadChallenges = async () => {
+                  if (!user) {
+                        setLoading(false);
+                        return;
+                  }
 
-                  if (!user) return;
                   try {
                         const res = await axiosInstance.get(`/api/user-challenges?email=${user.email}`);
                         setData(res.data);
+                        setFilteredData(res.data);
                   } catch (error) {
-                        toast.error(error.message);
+                        toast.error(error.message || "Failed to load challenges");
                   } finally {
                         setLoading(false);
                   }
             };
-            loadingActivities();
-      }, [auth, axiosInstance, user]);
-      console.log(data);
+            loadChallenges();
+      }, [axiosInstance, user]);
 
-      const shortTitle = (title = "") => {
-            const words = title.split(" ");
-            return words.length <= 20 ? title : words.slice(0, 10).join(" ") + "...";
+      const handleFilter = (filter) => {
+            setActiveFilter(filter);
+
+            if (filter === "All") {
+                  setFilteredData(data);
+            } else if (filter === "Ongoing") {
+                  setFilteredData(data.filter((item) => item.status !== "Completed" && (item.progress || 0) < 100));
+            } else if (filter === "Completed") {
+                  setFilteredData(data.filter((item) => item.status === "Completed" || (item.progress || 0) >= 100));
+            }
       };
+
+      const handleUpdateClick = (challenge) => {
+            setSelectedChallenge(challenge);
+            setIsModalOpen(true);
+      };
+
+      const handleProgressUpdate = async (updatedProgress) => {
+            try {
+                  await axiosInstance.patch(`/api/user-challenges/${selectedChallenge._id}`, {
+                        progress: updatedProgress,
+                        percentage: updatedProgress,
+                        status: updatedProgress >= 100 ? "Completed" : "In Progress",
+                  });
+
+                  const updatedData = data.map((item) =>
+                        item._id === selectedChallenge._id
+                              ? {
+                                      ...item,
+                                      progress: updatedProgress,
+                                      percentage: updatedProgress,
+                                      status: updatedProgress >= 100 ? "Completed" : "In Progress",
+                                }
+                              : item
+                  );
+
+                  setData(updatedData);
+
+                  if (activeFilter === "All") {
+                        setFilteredData(updatedData);
+                  } else {
+                        const filtered = updatedData.filter((item) => {
+                              if (activeFilter === "Ongoing") {
+                                    return item.status !== "Completed" && (item.progress || 0) < 100;
+                              } else if (activeFilter === "Completed") {
+                                    return item.status === "Completed" || (item.progress || 0) >= 100;
+                              }
+                              return true;
+                        });
+                        setFilteredData(filtered);
+                  }
+
+                  toast.success("Progress updated successfully!");
+                  setIsModalOpen(false);
+            } catch (error) {
+                  toast.error(error.response?.data?.message || "Failed to update progress");
+            }
+      };
+
       if (loading) return <Loading />;
+
+      if (!user) {
+            return (
+                  <div className="min-h-screen flex items-center justify-center">
+                        <div className="text-center">
+                              <h2 className="text-2xl font-bold mb-4">Please login to view your challenges</h2>
+                              <button
+                                    onClick={() => navigate("/sign")}
+                                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                              >
+                                    Go to Login
+                              </button>
+                        </div>
+                  </div>
+            );
+      }
+
       return (
-            <main className="py-20 px-20">
-                  <div className="py-8">
-                        <h2 className="font-semibold text-2xl">My Challenges</h2>
-                        <p className="mt-1 text-gray-600">
-                              Welcome back, <strong className="text-green-500">{user.displayName},</strong>
-                              Here's look at your progress.
-                        </p>
-                  </div>
-                  <div className="flex gap-8 mb-10">
-                        <button className="btn">All</button>
-                        <button className="btn">Ongoing</button>
-                        <button className="btn">Completed</button>
-                  </div>
-                  <section className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {data?.map((item) => (
-                              <div key={item._id} className="shadow rounded-b-md">
-                                    <img
-                                          src={item.imageUrl}
-                                          alt={item.challengeTitle}
-                                          className="w-full h-52 object-cover rounded-t-md"
-                                    />
-                                    <div className="p-4 flex justify-between items-center">
-                                          <h2 className="font-semibold">
-                                                {shortTitle(item.title || item.challengeTitle)}
-                                          </h2>
-                                          <span className="bg-green-200 text-gray-700 py-1 px-3 rounded-2xl">
-                                                {item.role}
-                                          </span>
-                                    </div>
-                                    <div className="p-4">
-                                          <div className="flex justify-between items-center  text-gray-600 mb-3">
-                                                <h4 className="font-bold text-gray-900">Progress </h4>
-                                                <p> {Number(item.progress)}%</p>
-                                          </div>
-                                          <div className="w-full bg-gray-200 rounded-full h-3">
-                                                <div
-                                                      className="bg-green-500 h-3 rounded-full transition-all duration-500"
-                                                      style={{ width: `${item.percentage}%` }}
-                                                ></div>
-                                          </div>
-                                    </div>
-                                    <div className="flex justify-end p-4 gap-8">
-                                          <button className="py-2 px-4  rounded-md bg-pink-500 font-semibold hover:bg-pink-400 text-white">Update</button>
-                                          <button
-                                                onClick={() => navigate(`/challenges/${item.challengeId}`)}
-                                                className="btn"
-                                          >
-                                                Details
-                                          </button>
-                                    </div>
-                              </div>
-                        ))}
-                  </section>
-            </main>
+            <>
+                  <ToastContainer />
+                  <main className="min-h-screen bg-gray-50 py-8 px-4 sm:px-8 lg:px-20">
+                        <MyChallengesHeader user={user} />
+
+                        <FilterButtons activeFilter={activeFilter} onFilterChange={handleFilter} />
+
+                        {filteredData.length === 0 ? (
+                              <EmptyState
+                                    activeFilter={activeFilter}
+                                    onBrowseChallenges={() => navigate("/challenges")}
+                              />
+                        ) : (
+                              <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                    {filteredData.map((challenge) => (
+                                          <ChallengeCard
+                                                key={challenge._id}
+                                                challenge={challenge}
+                                                onUpdate={() => handleUpdateClick(challenge)}
+                                                onViewDetails={() => navigate(`/challenges/${challenge.challengeId}`)}
+                                          />
+                                    ))}
+                              </section>
+                        )}
+                  </main>
+
+                  {isModalOpen && (
+                        <UpdateProgressModal
+                              challenge={selectedChallenge}
+                              onClose={() => setIsModalOpen(false)}
+                              onUpdate={handleProgressUpdate}
+                        />
+                  )}
+            </>
       );
 };
+
 export default MyChallenges;

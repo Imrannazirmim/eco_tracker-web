@@ -9,6 +9,8 @@ const ChallengeList = ({ challenges, resetFilters }) => {
   const start = (currentPage - 1) * itemsPerPage;
   const current = challenges.slice(start, start + itemsPerPage);
 
+  console.log(current);
+  
   const paginate = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
