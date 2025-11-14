@@ -93,7 +93,7 @@ const ForgetPassword = () => {
                                           Remember your password?{" "}
                                           <button
                                                 onClick={() => navigate("/sign")}
-                                                className="text-green-600 hover:text-green-700 font-medium"
+                                                className="text-green-600 cursor-pointer hover:text-green-700 font-medium"
                                           >
                                                 Back to Login
                                           </button>

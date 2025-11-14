@@ -1,16 +1,19 @@
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import googleImg from "../assets/google.png";
+import { useContext, useState } from "react";
 import { AuthContext } from "../Contexts/RootContext";
+import { useNavigate } from "react-router";
+import InputField from "../Components/Auth/InputField";
+import PasswordInput from "../Components/Auth/PasswordInput";
+import GoogleSignInButton from "../Components/Auth/GoogleSignInButton";
 import { toast, ToastContainer } from "react-toastify";
-import Loading from "../Components/Utils/Loading";
-import { Eye, EyeOff } from "lucide-react";
+import { getAuth } from "firebase/auth";
 
 const SignIn = () => {
       const { signInUser, googleSignUser } = useContext(AuthContext);
-      const navigate = useNavigate();
       const [loading, setLoading] = useState(false);
-      const [showPassword, setShowPassword] = useState(false);
+      const navigate = useNavigate();
+      const auth = getAuth();
+      const user = auth.currentUser;
+      console.log(user);
 
       const [formData, setFormData] = useState({
             email: "",
@@ -20,19 +23,16 @@ const SignIn = () => {
 
       const validateForm = () => {
             const newErrors = {};
-
             if (!formData.email) {
                   newErrors.email = "Email is required";
             } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
                   newErrors.email = "Email is invalid";
             }
-
             if (!formData.password) {
                   newErrors.password = "Password is required";
             } else if (formData.password.length < 6) {
                   newErrors.password = "Password must be at least 6 characters";
             }
-
             setError(newErrors);
             return Object.keys(newErrors).length === 0;
       };
@@ -53,43 +53,55 @@ const SignIn = () => {
             if (!validateForm()) return;
 
             setLoading(true);
-
             try {
                   await signInUser(formData.email, formData.password);
-                  toast.success("Login Successful");
-                  setTimeout(() => {
-                        navigate("/challenges");
-                  }, 2000);
+                  toast.success("Login Successful!");
+                  navigate("/challenges");
             } catch (error) {
-                  toast.error(error.message || "Login Failed. Try again");
-                  setError(error.message || "Login Failed. Try again");
+                  let message = "Login failed. Please try again.";
+                  if (error.code) {
+                        switch (error.code) {
+                              case "auth/invalid-email":
+                                    message = "Invalid email address.";
+                                    break;
+                              case "auth/user-not-found":
+                                    message = "No account found with this email.";
+                                    break;
+                              case "auth/wrong-password":
+                                    message = "Incorrect password. Please try again.";
+                                    break;
+                              case "auth/too-many-requests":
+                                    message = "Too many attempts. Please wait and try again.";
+                                    break;
+                        }
+                  }
+                  toast.error(message);
+                  setError({ general: message });
             } finally {
                   setLoading(false);
             }
       };
 
-      // Google sign in
-      const handleGoogleSign = async () => {
+      const handleGoogleSign = () => {
             setLoading(true);
-            try {
-                  await googleSignUser();
-                  toast.success("Login Successful");
-                  setTimeout(() => {
-                        navigate("/challenges");
-                  }, 2000);
-            } catch (error) {
-                  toast.error(error.message || "Login Failed");
-                  setError(error.message || "Login Failed");
-            } finally {
-                  setLoading(false);
-            }
-      };
+            googleSignUser()
+                  .then(() => {
+                        toast.success("Login Successfull");
+                        setLoading(false);
 
-      if (loading) return <Loading />;
+                        navigate("/challenges");
+                  })
+                  .catch((error) => {
+                        setError({ general: error.message || "Login Failed" });
+                        toast.error(error.message);
+
+                        setLoading(false);
+                  });
+      };
 
       return (
             <>
-                  <ToastContainer />
+                  <ToastContainer autoClose={500} />
                   <main className="w-full h-screen flex items-center justify-center bg-green-50">
                         <section className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
                               <div className="text-center mb-6">
@@ -97,81 +109,58 @@ const SignIn = () => {
                                     <p className="text-gray-600 mt-1">Join the community making a difference</p>
                               </div>
 
-                              <form onSubmit={handleFormSubmit} className="flex flex-col gap-5">
-                                    <div>
-                                          <label className="text-green-700 font-medium mb-1 block" htmlFor="email">
-                                                Email
-                                          </label>
-                                          <input
-                                                type="email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder="Enter your email"
-                                                className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-green-300"
-                                          />
-                                    </div>
+                              <div className="flex flex-col gap-5">
+                                    <InputField
+                                          label="Email"
+                                          type="email"
+                                          name="email"
+                                          value={formData.email}
+                                          onChange={handleChange}
+                                          placeholder="Enter your email"
+                                          error={error.email}
+                                          required
+                                    />
 
-                                    <div className="relative">
-                                          <label className="text-green-700 font-medium flex justify-between mb-1">
-                                                <span>Password</span>
-                                                <span
-                                                      onClick={() =>
-                                                            navigate("/forget-password", {
-                                                                  state: { email: formData.email },
-                                                            })
-                                                      }
-                                                      className="text-sm text-green-600 underline cursor-pointer hover:text-green-700"
-                                                >
-                                                      Forgot Password?
-                                                </span>
-                                          </label>
-                                          <input
-                                                type={showPassword ? "text" : "password"}
-                                                name="password"
-                                                value={formData.password}
-                                                required
-                                                onChange={handleChange}
-                                                placeholder="Enter your password"
-                                                className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-green-300"
-                                          />
-                                          <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-12 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                          >
-                                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                          </button>
-                                    </div>
+                                    <PasswordInput
+                                          label="Password"
+                                          name="password"
+                                          value={formData.password}
+                                          onChange={handleChange}
+                                          placeholder="Enter your password"
+                                          error={error.password}
+                                          required
+                                          showForgot={true}
+                                          onForgotClick={() =>
+                                                navigate("/forget-password", { state: { email: formData.email } })
+                                          }
+                                    />
+
+                                    {error.general && <p className="text-red-500 text-sm">{error.general}</p>}
 
                                     <button
-                                          type="submit"
+                                          onClick={handleFormSubmit}
                                           disabled={loading}
                                           className="w-full bg-green-600 text-white font-semibold py-2 rounded-xl hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                           {loading ? "Logging in..." : "Login"}
                                     </button>
-                              </form>
+                              </div>
 
                               <div className="mt-6 flex flex-col items-center gap-3">
-                                    <button
+                                    <GoogleSignInButton
                                           onClick={handleGoogleSign}
                                           disabled={loading}
-                                          className="flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 transition py-2 px-4 rounded-xl w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                          <img src={googleImg} alt="Google" className="w-6" />
-                                          Continue with Google
-                                    </button>
+                                          loading={loading}
+                                    />
 
                                     <p className="text-sm text-gray-700">
                                           Don't have an account?{" "}
-                                          <Link
-                                                to="/register"
-                                                className="text-green-600 font-semibold underline hover:text-green-700"
+                                          <button
+                                                onClick={() => navigate("/register")}
+                                                className="text-green-600 cursor-pointer font-semibold underline hover:text-green-700"
                                           >
                                                 Register
-                                          </Link>
+                                          </button>
                                     </p>
                               </div>
                         </section>
@@ -179,5 +168,4 @@ const SignIn = () => {
             </>
       );
 };
-
 export default SignIn;

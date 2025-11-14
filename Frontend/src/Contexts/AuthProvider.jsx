@@ -44,8 +44,10 @@ const AuthProvider = ({ children }) => {
             try {
                   const result = await signInWithEmailAndPassword(auth, email, password);
                   setUser(result.user);
+                  return result.user
             } catch (error) {
                   setError(error.message);
+                  throw error;
             } finally {
                   setLoading(false);
             }
@@ -58,8 +60,10 @@ const AuthProvider = ({ children }) => {
             try {
                   const result = await signInWithPopup(auth, googleProvider);
                   setUser(result.user);
+                  return result.user;
             } catch (error) {
                   setError(error.message);
+                  throw error;
             } finally {
                   setLoading(false);
             }
